@@ -1,0 +1,1049 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Colegios",
+        "description": "Documentación de la API (JWT Bearer)",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "Servidor principal"
+        }
+    ],
+    "paths": {
+        "/instituciones": {
+            "get": {
+                "tags": [
+                    "Instituciones"
+                ],
+                "summary": "Listar instituciones (Wizard)",
+                "description": "Devuelve instituciones paginadas, con estructura del Wizard.",
+                "operationId": "Instituciones_Index",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 15
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "En Proceso",
+                                "Aceptado",
+                                "Rechazado"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/InstitucionWizard"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "last": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "to": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Instituciones"
+                ],
+                "summary": "Crear institución (Wizard)",
+                "operationId": "Instituciones_Store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InstitucionWizardCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Creado",
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "/api/instituciones/7"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InstitucionWizardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorValidation"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/instituciones/{id}": {
+            "get": {
+                "tags": [
+                    "Instituciones"
+                ],
+                "summary": "Mostrar institución (Wizard)",
+                "operationId": "Instituciones_Show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 7
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InstitucionWizardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Instituciones"
+                ],
+                "summary": "Actualizar institución (Wizard)",
+                "operationId": "Instituciones_Update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 7
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InstitucionWizardUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InstitucionWizardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorValidation"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/regiones": {
+            "get": {
+                "tags": [
+                    "Regiones"
+                ],
+                "summary": "Listar regiones",
+                "description": "Devuelve el listado de regiones. Si se pasa ?include=comunas, incluye el arreglo de comunas por región.",
+                "operationId": "082ff02021dacbf7f09374360d895e3a",
+                "parameters": [
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "Incluir relaciones",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "comunas"
+                            ]
+                        },
+                        "example": "comunas"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listado de regiones",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegionsResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/regiones/{regionId}/comunas": {
+            "get": {
+                "tags": [
+                    "Regiones"
+                ],
+                "summary": "Obtener comunas por ID de región",
+                "description": "Devuelve la región solicitada con su arreglo de comunas.",
+                "operationId": "85db33b6b2eb806a427cf93a934751ae",
+                "parameters": [
+                    {
+                        "name": "regionId",
+                        "in": "path",
+                        "description": "ID de la región",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 13
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Región con comunas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar un nuevo usuario",
+                "description": "Crea un usuario con nombre de usuario y contraseña.",
+                "operationId": "4fba3074740898952b34e5b9a9681f5b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre_usuario",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nombre_usuario": {
+                                        "type": "string",
+                                        "example": "javier01"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 6,
+                                        "example": "12345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UsuarioSimple"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validación fallida"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Iniciar sesión",
+                "description": "Devuelve un JWT si las credenciales son válidas.",
+                "operationId": "1452175972331d50d10251ae20dfb50c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre_usuario",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nombre_usuario": {
+                                        "type": "string",
+                                        "example": "javier01"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "12345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas"
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Obtener perfil del usuario autenticado",
+                "operationId": "50ccc9534364638c5ddb9dc2d36ef4fd",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UsuarioPerfil"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Cerrar sesión",
+                "operationId": "c463b3f92305ea956710196b78019520",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Role": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Encargado"
+                    }
+                },
+                "type": "object"
+            },
+            "Persona": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "nombres": {
+                        "type": "string",
+                        "example": "Javier"
+                    },
+                    "apellidos": {
+                        "type": "string",
+                        "example": "Salvatierra"
+                    },
+                    "rut": {
+                        "type": "string",
+                        "example": "12.345.678-9"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "+56 9 1234 5678",
+                        "nullable": true
+                    },
+                    "correo": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "javier@example.com",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UsuarioSimple": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "persona_id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "nombre_usuario": {
+                        "type": "string",
+                        "example": "javier01"
+                    }
+                },
+                "type": "object"
+            },
+            "UsuarioPerfil": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "nombre_usuario": {
+                        "type": "string",
+                        "example": "javier01"
+                    },
+                    "persona_id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "persona": {
+                        "$ref": "#/components/schemas/Persona"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Role"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TokenResponse": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGci..."
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 3600
+                    }
+                },
+                "type": "object"
+            },
+            "MessageResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Sesión cerrada correctamente"
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorMessage": {
+                "properties": {
+                    "message": {
+                        "description": "Esquemas comunes para respuestas de error",
+                        "type": "string",
+                        "example": "No encontrado"
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorValidation": {
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "schema": "SchemasCommon",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "example": "El campo nombre es obligatorio."
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "SchemasCommon": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "example": "El campo nombre es obligatorio."
+                }
+            },
+            "ComunaShort": {
+                "properties": {
+                    "id": {
+                        "description": "====== SCHEMAS PARA INSTITUCIONES (WIZARD) ======",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Santiago"
+                    }
+                },
+                "type": "object"
+            },
+            "ColegioWizard": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 21
+                    },
+                    "institucion_id": {
+                        "type": "integer",
+                        "example": 7
+                    },
+                    "comuna_id": {
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "comuna": {
+                        "$ref": "#/components/schemas/ComunaShort"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Colegio 1-2"
+                    },
+                    "direccion": {
+                        "type": "string",
+                        "example": "Av. Siempre Viva 742"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "+56 9 1234 5678",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "InstitucionWizard": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 7
+                    },
+                    "comuna_id": {
+                        "type": "integer",
+                        "example": 13
+                    },
+                    "comuna": {
+                        "$ref": "#/components/schemas/ComunaShort"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Institución 3"
+                    },
+                    "rut": {
+                        "type": "string",
+                        "example": "12.345.678-9"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "+56 9 9876 5432",
+                        "nullable": true
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "En Proceso",
+                            "Aceptado",
+                            "Rechazado"
+                        ],
+                        "example": "En Proceso"
+                    },
+                    "colegios": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ColegioWizard"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "InstitucionWizardResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/InstitucionWizard"
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationLinks": {
+                "properties": {
+                    "first": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "last": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "prev": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "from": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "path": {
+                        "type": "string",
+                        "example": "http://api.test/api/instituciones"
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "to": {
+                        "type": "integer",
+                        "example": 15,
+                        "nullable": true
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 67
+                    }
+                },
+                "type": "object"
+            },
+            "InstitucionesWizardPaginatedResponse": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InstitucionWizard"
+                        }
+                    },
+                    "links": {
+                        "$ref": "#/components/schemas/PaginationLinks"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "InstitucionWizardCreateRequest": {
+                "required": [
+                    "nombre",
+                    "rut",
+                    "comuna_id"
+                ],
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "example": "Institución Demo"
+                    },
+                    "rut": {
+                        "type": "string",
+                        "example": "12.345.678-9"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "+56 9 1234 5678",
+                        "nullable": true
+                    },
+                    "comuna_id": {
+                        "type": "integer",
+                        "example": 13
+                    },
+                    "colegios": {
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "nombre",
+                                "comuna_id",
+                                "direccion"
+                            ],
+                            "properties": {
+                                "nombre": {
+                                    "type": "string",
+                                    "example": "Colegio Central"
+                                },
+                                "comuna_id": {
+                                    "type": "integer",
+                                    "example": 101
+                                },
+                                "direccion": {
+                                    "type": "string",
+                                    "example": "Calle Falsa 123"
+                                },
+                                "telefono": {
+                                    "type": "string",
+                                    "example": "+56 2 2222 2222",
+                                    "nullable": true
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "InstitucionWizardUpdateRequest": {
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "example": "Institución Demo Actualizada"
+                    },
+                    "rut": {
+                        "type": "string",
+                        "example": "12.345.678-9"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "+56 9 1234 5678",
+                        "nullable": true
+                    },
+                    "comuna_id": {
+                        "type": "integer",
+                        "example": 13
+                    },
+                    "colegios": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "Si existe, se actualiza; si no, se crea",
+                                    "type": "integer",
+                                    "example": 21
+                                },
+                                "nombre": {
+                                    "type": "string",
+                                    "example": "Colegio Central"
+                                },
+                                "comuna_id": {
+                                    "type": "integer",
+                                    "example": 101
+                                },
+                                "direccion": {
+                                    "type": "string",
+                                    "example": "Calle Falsa 123"
+                                },
+                                "telefono": {
+                                    "type": "string",
+                                    "example": "+56 2 2222 2222",
+                                    "nullable": true
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Comuna": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Santiago"
+                    },
+                    "region_id": {
+                        "type": "integer",
+                        "example": 13,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Region": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 13
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Región Metropolitana de Santiago"
+                    },
+                    "comunas": {
+                        "description": "Puede venir vacío si no se incluye ?include=comunas",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Comuna"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "RegionResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/Region"
+                    }
+                },
+                "type": "object"
+            },
+            "RegionsResponse": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Region"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Instituciones",
+            "description": "Instituciones"
+        },
+        {
+            "name": "Regiones",
+            "description": "Regiones"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ]
+}
